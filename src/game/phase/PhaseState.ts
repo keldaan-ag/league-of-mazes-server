@@ -1,4 +1,4 @@
-import { GameState } from "../../rooms/schema/GameState"
+import { GameRoom } from "../../rooms/GameRoom"
 import { Phase } from "../../types"
 
 export abstract class PhaseState{
@@ -10,17 +10,17 @@ export abstract class PhaseState{
         this.type = Phase.WAIT
     }
 
-    update(dt: number, gameState: GameState): void|PhaseState{
+    update(dt: number, gameRoom: GameRoom): void|PhaseState{
         if(this.type !== Phase.DRAW){
             this.time -= dt
             const newTime = Math.max(0, Math.round(this.time / 1000))
-            if(gameState.time !== newTime){
-                gameState.time = newTime
+            if(gameRoom.state.time !== newTime){
+                gameRoom.state.time = newTime
             }
         }
     }
 
-    onExit(){}
+    onExit(gameRoom: GameRoom){}
 
-    onEnter(){}
+    onEnter(gameRoom: GameRoom){}
 }

@@ -1,5 +1,5 @@
-import { GameState } from "../../rooms/schema/GameState";
-import { Phase } from "../../types";
+import { GameRoom } from "../../rooms/GameRoom";
+import { Phase, GameState } from "../../types";
 import { BuildPhase } from "./BuildPhase";
 import { PhaseState } from "./PhaseState";
 
@@ -10,14 +10,21 @@ export class WaitPhase extends PhaseState{
         this.type = Phase.WAIT
     }
 
-    update(dt: number, gameState: GameState): void|PhaseState{
-        super.update(dt, gameState)
+    update(dt: number, gameRoom: GameRoom): void|PhaseState{
+        super.update(dt, gameRoom)
         if(this.time <= 0){
             return new BuildPhase()
         }
     }
+    
+    onExit(gameRoom: GameRoom){
+        super.onExit(gameRoom)
+    }
 
-    onExit(){}
-
-    onEnter(){}
+    onEnter(gameRoom: GameRoom){
+        super.onEnter(gameRoom)
+        this.time = gameRoom.state.waitTime * 1000
+        gameRoom.mazeManager.generateMazeTemplate(gameRoom.state.width, gameRoom.state.height)
+        gameRoom.mazeManager.updateMazes(gameRoom.state.players)
+    }
 }

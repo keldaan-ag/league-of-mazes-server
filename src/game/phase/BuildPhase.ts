@@ -1,4 +1,4 @@
-import { GameState } from "../../rooms/schema/GameState";
+import { GameRoom } from "../../rooms/GameRoom";
 import { Phase } from "../../types";
 import { GuessPhase } from "./GuessPhase";
 import { PhaseState } from "./PhaseState";
@@ -11,14 +11,19 @@ export class BuildPhase extends PhaseState{
     }
 
 
-    update(dt: number, gameState: GameState): void|PhaseState{
-        super.update(dt, gameState)
+    update(dt: number, gameRoom: GameRoom): void|PhaseState{
+        super.update(dt, gameRoom)
         if(this.time <= 0){
             return new GuessPhase()
         }
     }
+    
+    onExit(gameRoom: GameRoom){
+        super.onExit(gameRoom)
+    }
 
-    onExit(){}
-
-    onEnter(){}
+    onEnter(gameRoom: GameRoom){
+        super.onEnter(gameRoom)
+        this.time = gameRoom.state.buildTime * 1000
+    }
 }

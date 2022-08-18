@@ -1,15 +1,17 @@
 import { Room, Client } from "colyseus";
+import { MazeManager } from "../game/maze/MazeManager";
 import { PhaseState } from "../game/phase/PhaseState";
 import { WaitPhase } from "../game/phase/WaitPhase";
-import { Phase } from "../types";
-import { GameState, Player } from "./schema/GameState";
+import { Phase, GameState, Player, Transfer, IBuildClick } from "../types";
 
 export class GameRoom extends Room<GameState> {
     phaseState: PhaseState;
+    mazeManager: MazeManager;
 
     constructor(){
         super()
         this.phaseState = new WaitPhase()
+        this.mazeManager = new MazeManager()
     }
 
     onCreate (options: any) {
@@ -17,20 +19,22 @@ export class GameRoom extends Room<GameState> {
         this.changePhase(new WaitPhase())
         this.setSimulationInterval((deltaTime) => this.update(deltaTime))
 
-        this.onMessage("type", (client, message) => {
-        //
-        // handle "type" message
-        //
+        this.onMessage(Transfer.BUILD_CLICK, (client: Client, message: IBuildClick) => {
+            if(this.state.phase === Phase.BUILD && client.id === message.id){
+                const player = this.state.players.find(p=>p.id === message.id)
+                if(player){
+                    this.mazeManager.placeWall(player, message.x, message.y)
+                }
+            }
         });
 
     }
 
     changePhase(phaseState: PhaseState){
-        this.phaseState.onExit()
+        this.phaseState.onExit(this)
         this.phaseState = phaseState
         this.state.phase = this.phaseState.type
-        this.setPhaseTime()
-        this.phaseState.onEnter()
+        this.phaseState.onEnter(this)
     }
 
     setPhaseTime(){
@@ -58,7 +62,7 @@ export class GameRoom extends Room<GameState> {
 
   
     update (deltaTime: number) {
-        const newPhase = this.phaseState.update(deltaTime, this.state)
+        const newPhase = this.phaseState.update(deltaTime, this)
         if(newPhase){
             this.changePhase(newPhase)
         }
@@ -67,7 +71,7 @@ export class GameRoom extends Room<GameState> {
 
     onJoin (client: Client, options: any) {
         console.log(client.sessionId, "joined!");
-        this.state.players.push(new Player(client.id, this.state.width, this.state.height))
+        this.state.players.push(new Player(client.id, this.mazeManager.template!))
     }
 
     onLeave (client: Client, consented: boolean) {
