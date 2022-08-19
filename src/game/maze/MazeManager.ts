@@ -5,7 +5,7 @@ export class MazeManager{
     
     generateMazeTemplate(width: number, height: number){
         this.template = {
-            data: [],
+            data: new Array<ICell>(width*height),
             width: width,
             height: height,
             entry: {x:0,y:0},
@@ -23,13 +23,13 @@ export class MazeManager{
     generateCells(){
         for (let xi = 0; xi < this.template!.width; xi++) {
             for (let yi = 0; yi < this.template!.height; yi++) {
-                this.template?.data.push({
+                this.template!.data[this.template!.height * xi + yi] = {
                     x: xi,
                     y: yi,
                     isEntry: this.template!.entry.x === xi && this.template!.entry.y === yi,
                     isExit: this.template!.exit.x === xi && this.template!.exit.y === yi,
                     isWall: Math.random() > 0.9
-                })
+                }
             }
         }
     }
@@ -41,6 +41,7 @@ export class MazeManager{
     }
 
     placeWall(player: Player, x: number, y: number){
-        
+        console.log('placing wall')
+        player.maze.data[this.template!.height * x + y].isWall = true
     }
 }
