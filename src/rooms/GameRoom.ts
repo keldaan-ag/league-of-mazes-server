@@ -26,8 +26,16 @@ export class GameRoom extends Room<GameState> {
                     this.mazeManager.placeWall(player, message.x, message.y)
                 }
             }
-        });
+        })
 
+        this.onMessage(Transfer.GUESS_CLICK, (client: Client, guessId: string) =>{
+            if(this.state.phase === Phase.GUESS && this.state.players.findIndex(p=>p.id===guessId) !== -1){
+                const player = this.state.players.find(p=>p.id===client.id)
+                if(player){
+                    player.guessId = guessId
+                }
+            }
+        })
     }
 
     changePhase(phaseState: PhaseState){
