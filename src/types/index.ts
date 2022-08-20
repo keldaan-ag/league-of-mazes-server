@@ -35,6 +35,7 @@ export interface IPlayer{
     maze: IMaze
     guessId: string
     points: number
+    rank: number
 }
 
 export interface IMaze{
@@ -147,6 +148,7 @@ export class Player extends Schema implements IPlayer{
     @type(Maze) maze: Maze
     @type("string") guessId: string
     @type("number") points: number
+    @type("number") rank: number
 
     constructor(id: string, maze: IMaze){
         super()
@@ -154,6 +156,7 @@ export class Player extends Schema implements IPlayer{
         this.guessId = ''
         this.maze = new Maze(maze)
         this.points = 0
+        this.rank = 0
     }
 }
 

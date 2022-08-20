@@ -43,15 +43,12 @@ export class MazeManager{
     }
 
     solveMazes(players: Player[]){
+        const solvedMazes = new Map<string,PathSolver>()
         players.forEach(p=>{
             const solver = new PathSolver(p.maze)
-            solver.shortestPath.forEach(coord=>{
-                const cell = p.maze.getValue(coord.x, coord.y)
-                if(cell){
-                    cell.isPath = true
-                }
-            })
+            solvedMazes.set(p.id, solver)
         })
+        return solvedMazes
     }
 
     placeWall(player: Player, x: number, y: number){
