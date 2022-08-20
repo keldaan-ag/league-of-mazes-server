@@ -15,6 +15,10 @@ export default Arena({
 
     },
 
+    initializeExpress: (app) =>{
+        
+    },
+
     beforeListen: () => {
         /**
          * Before before gameServer.listen() is called.
