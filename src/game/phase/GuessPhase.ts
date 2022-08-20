@@ -15,7 +15,7 @@ export class GuessPhase extends PhaseState{
     update(dt: number, gameRoom: GameRoom): void|PhaseState{
         super.update(dt, gameRoom)
         if(this.time <= 0){
-            return new WaitPhase()
+            return new DrawPhase()
         }
     }
     

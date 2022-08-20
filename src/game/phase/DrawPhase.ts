@@ -1,6 +1,7 @@
 import { GameRoom } from "../../rooms/GameRoom";
 import { Phase } from "../../types";
 import { PhaseState } from "./PhaseState";
+import { WaitPhase } from "./WaitPhase";
 
 export class DrawPhase extends PhaseState{
 
@@ -12,14 +13,18 @@ export class DrawPhase extends PhaseState{
 
     update(dt: number, gameRoom: GameRoom): void|PhaseState{
         super.update(dt, gameRoom)
+        if(this.time <= 0){
+            return new WaitPhase()
+        }
     }
-    
+
     onExit(gameRoom: GameRoom){
         super.onExit(gameRoom)
     }
 
     onEnter(gameRoom: GameRoom){
         super.onEnter(gameRoom)
-        this.time = 0
+        this.time = gameRoom.state.guessTime * 1000
+        gameRoom.mazeManager.solveMazes(gameRoom.state.players)
     }
 }

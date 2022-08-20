@@ -15,7 +15,7 @@ export class GameRoom extends Room<GameState> {
     }
 
     onCreate (options: any) {
-        this.setState(new GameState(10,10,30,10,5))
+        this.setState(new GameState(10,10,30,5,5))
         this.changePhase(new WaitPhase())
         this.setSimulationInterval((deltaTime) => this.update(deltaTime))
 

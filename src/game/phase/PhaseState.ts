@@ -11,12 +11,10 @@ export abstract class PhaseState{
     }
 
     update(dt: number, gameRoom: GameRoom): void|PhaseState{
-        if(this.type !== Phase.DRAW){
-            this.time -= dt
-            const newTime = Math.max(0, Math.round(this.time / 1000))
-            if(gameRoom.state.time !== newTime){
-                gameRoom.state.time = newTime
-            }
+        this.time -= dt
+        const newTime = Math.max(0, Math.round(this.time / 1000))
+        if(gameRoom.state.time !== newTime){
+            gameRoom.state.time = newTime
         }
     }
 

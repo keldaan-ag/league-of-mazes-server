@@ -1,3 +1,4 @@
+import { PathSolver } from "../../path/PathSolver"
 import { Coordinate, ICell, IMaze, Maze, Player } from "../../types"
 
 export class MazeManager{
@@ -28,7 +29,8 @@ export class MazeManager{
                     y: yi,
                     isEntry: this.template!.entry.x === xi && this.template!.entry.y === yi,
                     isExit: this.template!.exit.x === xi && this.template!.exit.y === yi,
-                    isWall: Math.random() > 0.9
+                    isWall: this.template!.entry.x !== xi && this.template!.entry.y !== yi && Math.random() > 0.9,
+                    isPath: false
                 }
             }
         }
@@ -40,8 +42,19 @@ export class MazeManager{
         })
     }
 
+    solveMazes(players: Player[]){
+        players.forEach(p=>{
+            const solver = new PathSolver(p.maze)
+            solver.shortestPath.forEach(coord=>{
+                const cell = p.maze.getValue(coord.x, coord.y)
+                if(cell){
+                    cell.isPath = true
+                }
+            })
+        })
+    }
+
     placeWall(player: Player, x: number, y: number){
-        console.log('placing wall')
         player.maze.data[this.template!.height * x + y].isWall = true
     }
 }
