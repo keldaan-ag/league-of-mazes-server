@@ -4,14 +4,22 @@ import { PhaseState } from "../game/phase/PhaseState";
 import { WaitPhase } from "../game/phase/WaitPhase";
 import { Phase, GameState, Player, Transfer, IBuildClick } from "../types";
 
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
+
 export class GameRoom extends Room<GameState> {
-    phaseState: PhaseState;
-    mazeManager: MazeManager;
+    phaseState: PhaseState
+    mazeManager: MazeManager
+    uniqueNamesGeneratorConfig: Config
 
     constructor(){
         super()
         this.phaseState = new WaitPhase()
         this.mazeManager = new MazeManager()
+        this.uniqueNamesGeneratorConfig = {
+            dictionaries: [colors, animals],
+            separator: '-',
+            length: 2,
+        }
     }
 
     onCreate (options: any) {
@@ -79,11 +87,17 @@ export class GameRoom extends Room<GameState> {
 
     onJoin (client: Client, options: any) {
         console.log(client.sessionId, "joined!");
-        this.state.players.push(new Player(client.id, this.mazeManager.template!))
+        const player = new Player(client.id, this.mazeManager.template!)
+        player.displayName = uniqueNamesGenerator(this.uniqueNamesGeneratorConfig)
+        this.state.players.push(player)
     }
 
     onLeave (client: Client, consented: boolean) {
         console.log(client.sessionId, "left!");
+        const index = this.state.players.findIndex(p=>p.id === client.id)
+        if(index !== -1){
+            this.state.players.splice(index,1)
+        }
     }
 
     onDispose() {
