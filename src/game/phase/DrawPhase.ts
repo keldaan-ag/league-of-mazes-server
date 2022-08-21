@@ -31,7 +31,7 @@ export class DrawPhase extends PhaseState{
             }
             else{
                 this.drawPath(gameRoom)
-                this.time = 500
+                this.time = 300
             }
         }
     }
