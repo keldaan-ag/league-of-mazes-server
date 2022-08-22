@@ -25,6 +25,6 @@ export class GuessPhase extends PhaseState{
 
     onEnter(gameRoom: GameRoom){
         super.onEnter(gameRoom)
-        this.time = gameRoom.state.guessTime * 1000
+        this.time = gameRoom.state.guessTime * 1000 * gameRoom.state.players.length
     }
 }
