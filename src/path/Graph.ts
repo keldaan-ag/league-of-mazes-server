@@ -11,7 +11,7 @@ export class Graph implements IGraph{
         this.exit = maze.exit
         this.nodes = new Map<string,Node>()
         maze.data.forEach(cell=>{
-            if(!cell.isWall){
+            if(!cell.isWall && !cell.isHole){
                 this.nodes.set(`${cell.x}-${cell.y}`, new Node(cell.x, cell.y, maze))
             }
         })

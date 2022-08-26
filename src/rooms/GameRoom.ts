@@ -31,7 +31,7 @@ export class GameRoom extends Room<GameState> {
             if(this.state.phase === Phase.BUILD && client.id === message.id){
                 const player = this.state.players.find(p=>p.id === message.id)
                 if(player){
-                    this.mazeManager.placeWall(player, message.x, message.y)
+                    this.mazeManager.handleCellClick(player, message.x, message.y)
                 }
             }
         })

@@ -41,6 +41,7 @@ export class DrawPhase extends PhaseState{
         gameRoom.state.players.forEach(p=>{
             p.rank = 0
             p.guessId = ''
+            p.maze.score = 0
         })
 
     }
@@ -85,6 +86,7 @@ export class DrawPhase extends PhaseState{
                 const coordinate = solvedMaze!.shortestPath.shift()
                 const cell = p.maze.getValue(coordinate!.x, coordinate!.y)
                 if(cell){
+                    p.maze.score ++
                     cell.isPath = true
                 }
             }

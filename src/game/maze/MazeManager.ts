@@ -1,5 +1,5 @@
 import { PathSolver } from "../../path/PathSolver"
-import { Coordinate, ICell, IMaze, Maze, Player } from "../../types"
+import { ICell, IMaze, Maze, Player } from "../../types"
 
 export class MazeManager{
     template: IMaze|undefined
@@ -10,7 +10,8 @@ export class MazeManager{
             width: width,
             height: height,
             entry: {x:0,y:0},
-            exit: {x:0,y:0}
+            exit: {x:0,y:0},
+            score: 0
         }
         this.generateEntryExit()
         this.generateCells()
@@ -31,8 +32,9 @@ export class MazeManager{
                     y: yi,
                     isEntry: isEntry,
                     isExit: isExit,
-                    isWall: !isEntry && !isExit && Math.random() > 0.9,
-                    isPath: false
+                    isHole: !isEntry && !isExit && Math.random() > 0.9,
+                    isPath: false,
+                    isWall: false
                 }
             }
         }
@@ -53,7 +55,10 @@ export class MazeManager{
         return solvedMazes
     }
 
-    placeWall(player: Player, x: number, y: number){
-        player.maze.data[this.template!.height * x + y].isWall = true
+    handleCellClick(player: Player, x: number, y: number){
+        const cell = player.maze.getValue(x,y)
+        if(cell && !cell.isHole &&!cell.isEntry && !cell.isExit){
+            cell.isWall = !cell.isWall
+        }
     }
 }
